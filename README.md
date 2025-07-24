@@ -2,6 +2,8 @@
 
 A Go service that receives a Brazilian ZIP code (CEP), identifies the city, and returns the current temperature in Celsius, Fahrenheit, and Kelvin.
 
+🌐 **Live Demo**: https://weather-getter-ihg6y4y3ta-ue.a.run.app/
+
 ## Features
 
 - Validates 8-digit ZIP codes
@@ -86,6 +88,9 @@ curl http://localhost:8080/weather/01001000
 
 # Get temperature for Rio de Janeiro (Copacabana)
 curl http://localhost:8080/weather/22010000
+
+# Using the live demo
+curl https://weather-getter-ihg6y4y3ta-ue.a.run.app/weather/01001000
 ```
 
 #### Success Response (200 OK)
