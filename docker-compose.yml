@@ -1,15 +1,43 @@
 version: '3.8'
 
 services:
-  weather-api:
+  service-a:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: service-a/Dockerfile
     ports:
       - "8080:8080"
     environment:
-      - WEATHER_API_KEY=${WEATHER_API_KEY}
       - PORT=8080
-      - LOG_JSON=false
       - LOG_LEVEL=INFO
+      - LOG_JSON=false
+      - SERVICE_B_URL=http://service-b:8081
+      - ZIPKIN_URL=http://zipkin:9411/api/v2/spans
+    depends_on:
+      - service-b
+      - zipkin
+    restart: unless-stopped
+
+  service-b:
+    build:
+      context: .
+      dockerfile: service-b/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - LOG_LEVEL=INFO
+      - LOG_JSON=false
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
+      - ZIPKIN_URL=http://zipkin:9411/api/v2/spans
+    depends_on:
+      - zipkin
+    restart: unless-stopped
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem
     restart: unless-stopped

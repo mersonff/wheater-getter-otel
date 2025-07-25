@@ -2,21 +2,21 @@ FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
+COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -v -o weather-app
+RUN CGO_ENABLED=0 GOOS=linux go build -o service-a ./service-a
 
 FROM alpine:latest
+
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
-COPY --from=builder /app/weather-app .
+COPY --from=builder /app/service-a .
 
 EXPOSE 8080
 
-CMD ["./weather-app"]
+CMD ["./service-a"] 
