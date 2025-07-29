@@ -119,6 +119,16 @@ func (s *ServiceA) handleCEPRequest(w http.ResponseWriter, r *http.Request) {
 			"cep":   request.CEP,
 			"error": err.Error(),
 		})
+
+		if err.Error() == "can not find zipcode" {
+			s.sendErrorResponse(w, "can not find zipcode", http.StatusNotFound)
+			return
+		}
+		if err.Error() == "invalid zipcode" {
+			s.sendErrorResponse(w, "invalid zipcode", http.StatusUnprocessableEntity)
+			return
+		}
+
 		s.sendErrorResponse(w, "error processing request", http.StatusInternalServerError)
 		return
 	}
